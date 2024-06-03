@@ -4,16 +4,16 @@ An implementation of the diffusion model that generates oscillatory motion for a
 
 Requirements:
 
-* Python 3.11.8
-* torch 2.2.2
-* torchvision 0.17.2
-* diffusers 0.27.2
-* torchmetrics 1.3.2
-* opencv-python 4.9.0.80
-* scipy 1.12.0
-* matplotlib 3.8.3
+* Python 3.10.12
+* torch 2.3.0
+* torchvision 0.18.0
+* diffusers 0.28.0
+* torchmetrics 1.4.0
+* opencv-python 4.8.0
+* scipy 1.11.4
+* matplotlib 3.7.1
 * moviepy 1.0.3 (for writing video files)
-* cupy (for softmax splatting)
+* cupy 12.2.0 (for softmax splatting)
 * pyflow https://github.com/pathak22/pyflow (for optical flow estimation)
 
 References:
