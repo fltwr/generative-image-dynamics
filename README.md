@@ -32,7 +32,7 @@ References:
 Notes:
 
 * The real images and videos in this repo are from Wikimedia Commons.
-* The model that animates an image according to optical flow is modified from https://github.com/sniklaus/softmax-splatting. The latent diffusion model for motion synthesis is implemented using the diffusers library. Optical flow is estimated using https://github.com/pathak22/pyflow.
+* The model that generates video frames from the input image and generated motion is modified from the [implementation](https://github.com/sniklaus/softmax-splatting) of softmax splatting. The diffusion model for motion synthesis is implemented using the diffusers library. Optical flow is estimated using [pyflow](https://github.com/pathak22/pyflow).
 
 ## Generating optical flow from image
 
@@ -46,16 +46,20 @@ Example:
 
 * In this example the frames are warped by OpenCV remapping, instead of the frame synthesis model described in the next section.
 
-Notes on training the U-Net:
+Training the U-Net:
 
-* It was trained on 818 short videos.
-  * One or more 150-frame sequences were taken from each video at 30 FPS, resulting in 7218 sequences in total.
-  * The contents of these videos are limited to **plants** moving in the wind. I collected them from YouTube by searching plant names, places ("mountain", "meadow", " arboretum"...), seasons, "wind", "tripod", "no looping", etc.
-* The optical flow from the first frame to the other frames need to be estimated for each sequence for training the U-Net.
-  * I used [pyflow](https://github.com/pathak22/pyflow) with [these parameters](utils/flow.py#L7) to estimate optical flow.
-  <!-- * Filtering out large or incorrect motion: -->
-  * The training code ([train_unet.py](train_unet.py)) assumes that the estimations are stored as NPY files. I stored them in half-precision to save space.
+* See [train_unet.py](train_unet.py).
 * I trained the U-Net for around 368K iterations (or 450 epochs with 818 iterations per epoch) using a single L4 GPU and a batch size of 1.
+
+Notes on training data:
+
+* I used 818 short videos for training. One or more 150-frame sequences were taken from each video at 30 FPS, resulting in 7218 sequences in total.
+* The contents of these videos are limited to plants moving in the wind. I collected them from YouTube by searching plant names, places ("mountain", "meadow", " arboretum"...), seasons, "wind", "tripod" (to avoid camera motion), "no looping" (to avoid duplicate videos), etc.
+  * The collected videos were cut into short videos so that each video is a single camera shot. These short videos were processed to filter out duplicates and camera motion.
+* The optical flow from the first frame to the other frames need to be estimated for each sequence to train the U-Net. I used [pyflow](https://github.com/pathak22/pyflow) with [these parameters](utils/flow.py#L7) and resolution 256 (width) x 160 (height). The training code assumes that the estimations are stored as NPY files. I stored them in half-precision to save space.
+  * Sequences with median optical flow magnitude larger than 0.5 were removed (not included in [data/labels/motion_synthesis_train_set.csv](data/labels/motion_synthesis_train_set.csv)), to filter out incorrect optical flow estimations under this setting.
+* The FFT were normalized for the diffusion model by dividing the coefficients at each frequency by its standard deviation from zero and by a scaling factor `scale`, similarly as the "frequency adaptive normalization" in the paper. I used the standard deviations in [data/labels/fft_std.npy](data/labels/fft_std.py) and `scale=2.82`, so that around 3% of the coefficients were out of the range [-1, 1] after normalization. If you wish to recalculate the standard deviations or adjust the `scale` parameter, you can use `FrameSpectrumDataset` with methods `get_std_from_zero` and `test_scales` in [utils/dataset.py](utils/dataset.py).
+
 
 ## Generating video from image and optical flow
 
@@ -75,3 +79,7 @@ Evaluation:
 Example:
 
 ![](data/frame_synthesis_sample.gif)
+
+<!-- Model: -->
+
+<!-- Training: -->
