@@ -1,6 +1,4 @@
-# An implementation of Generative Image Dynamics
-
-An implementation of the diffusion model that generates oscillatory motion for an input image introduced in Generative Image Dynamics [1] and a model that animates the image with the generated motion based on softmax splatting [2].
+An unofficial implementation of the diffusion model that generates oscillatory motion for an input image introduced in Generative Image Dynamics [1] and a model that animates the image with the generated motion based on softmax splatting [2].
 
 * [1] Zhengqi Li, Richard Tucker, Noah Snavely, and Aleksander Holynski. Generative image dynamics. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 2024.
 * [2] Simon Niklaus and Feng Liu. Softmax splatting for video frame interpolation. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition, pages 5437–5446, 2020.
