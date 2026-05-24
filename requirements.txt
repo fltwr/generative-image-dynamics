@@ -1,0 +1,10 @@
+torch==2.3.0
+torchvision==0.18.0
+diffusers==0.28.0
+torchmetrics==1.4.0
+opencv-python==4.8.0.76
+scipy==1.11.4
+matplotlib==3.7.1
+moviepy==1.0.3
+cupy==12.2.0
+
